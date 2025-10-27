@@ -50,7 +50,6 @@ scheduler = ReduceLROnPlateau(
     optimizer,
     mode='min', # loss 감소 기준 (max면 metric 증가 기준)
     factor=0.5, # lr 감소 비율
-    threshold=1e-4, # 개선 기준
     patience=2, # 개선 없으면 기다릴 epoch 수
     min_lr=1e-6 # lr 최소값 제한
 )
