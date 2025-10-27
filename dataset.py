@@ -17,7 +17,7 @@ def elastic_deformation(img):
     map_x = (x + map_x).astype(np.float32)
     map_y = (y + map_y).astype(np.float32)
 
-    output = cv2.remap(img, map_x, map_y, interpolation=cv2.INTER_NEAREST, borderMode=cv2.BORDER_REFLECT)
+    output = cv2.remap(img, map_x, map_y, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
 
     return output
 
@@ -48,6 +48,6 @@ class UNetDataset(Dataset):
         label = cv2.resize(label, self.size, interpolation=cv2.INTER_NEAREST)
 
         image = torch.from_numpy(image).unsqueeze(0).float() / 255.0
-        label = torch.from_numpy(label).float()
+        label = torch.from_numpy(label).unsqueeze(0).float() / 255.0
 
         return image, label

@@ -66,20 +66,20 @@ for epoch in range(1, num_epochs + 1):
         optimizer.zero_grad()
         outputs = model(images)
 
-        labels = labels[:, :outputs.size()[2], :outputs.size()[3]].unsqueeze(1).float() / 255.0
+        labels = labels[:, :, :outputs.size()[2], :outputs.size()[3]]
 
         loss = bceloss(outputs, labels)
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.item() * images.size(0)
+        train_loss += loss.item()
 
         if (i + 1) % 10 == 0 or (i + 1) == len(train_loader):
             print(f'Epoch [{epoch+1}/{num_epochs}], '
                   f'Iter [{i+1}/{len(train_loader)}], '
                   f'Loss: {train_loss/(i+1):.4f}')
 
-    train_loss /= len(train_loader.dataset)
+    train_loss /= len(train_loader)
 
     # Validation #
     model.eval()
@@ -90,12 +90,12 @@ for epoch in range(1, num_epochs + 1):
             labels = labels.to(device)
             outputs = model(images)
 
-            labels = labels[:, :outputs.size()[2], :outputs.size()[3]].unsqueeze(1).float() / 255.0
+            labels = labels[:, :, :outputs.size()[2], :outputs.size()[3]]
 
             loss = bceloss(outputs, labels)
-            val_loss += loss.item() * images.size(0)
+            val_loss += loss.item()
 
-    val_loss /= len(val_loader.dataset)
+    val_loss /= len(val_loader)
 
     scheduler.step(val_loss)
 
