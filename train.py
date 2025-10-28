@@ -31,8 +31,8 @@ train_dataset, valid_subset = random_split(dataset, [train_size, val_size], torc
 valid_dataset = UNetDataset(img_path, label_path, False)
 valid_dataset = Subset(valid_dataset, valid_subset.indices) # Validation Dataset에는 elastic deformation 적용 X 위해
 
-train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
-val_loader = DataLoader(valid_dataset, batch_size=4, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+val_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
 
 # Model #
 model = UNet().to(device)
@@ -65,8 +65,6 @@ for epoch in range(1, num_epochs + 1):
         optimizer.zero_grad()
         outputs = model(images)
 
-        labels = labels[:, :, :outputs.size()[2], :outputs.size()[3]]
-
         loss = bceloss(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -88,8 +86,6 @@ for epoch in range(1, num_epochs + 1):
             images = images.to(device)
             labels = labels.to(device)
             outputs = model(images)
-
-            labels = labels[:, :, :outputs.size()[2], :outputs.size()[3]]
 
             loss = bceloss(outputs, labels)
             val_loss += loss.item()

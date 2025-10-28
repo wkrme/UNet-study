@@ -28,7 +28,6 @@ class UNetDataset(Dataset):
         self.image_files = sorted(os.listdir(image_dir))
         self.label_files = sorted(os.listdir(label_dir))
         self.train = train
-        self.size = (572, 572)
 
     def __len__(self):
         return len(self.image_files)
@@ -44,8 +43,8 @@ class UNetDataset(Dataset):
             image = elastic_deformation(image)
             label = elastic_deformation(label)
 
-        image = cv2.resize(image, self.size, interpolation=cv2.INTER_LINEAR)
-        label = cv2.resize(label, self.size, interpolation=cv2.INTER_NEAREST)
+        image = cv2.resize(image, (572, 572), interpolation=cv2.INTER_LINEAR)
+        label = cv2.resize(label, (388, 388), interpolation=cv2.INTER_NEAREST)
 
         image = torch.from_numpy(image).unsqueeze(0).float() / 255.0
         label = torch.from_numpy(label).unsqueeze(0).float() / 255.0
